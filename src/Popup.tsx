@@ -66,6 +66,14 @@ const Popup: React.FC = () => {
     }
   }
 
+  // 文字数カウント用のスタイル
+  const countStyle: React.CSSProperties = {
+    fontSize: '12px',
+    color: '#666',
+    textAlign: 'right',
+    marginBottom: '4px'
+  }
+
   // スタイル設定（シンプルにinline styleで実装）
   const containerStyle: React.CSSProperties = {
     width: '400px',
@@ -78,7 +86,7 @@ const Popup: React.FC = () => {
     width: '100%',
     height: '150px',
     boxSizing: 'border-box',
-    marginBottom: '8px'
+    marginBottom: '2px' // 文字カウンターのために少し縮める
   }
 
   const resultStyle: React.CSSProperties = {
@@ -129,6 +137,9 @@ const Popup: React.FC = () => {
         value={latexInput}
         onChange={(e) => setLatexInput(e.target.value)}
       />
+      <div style={countStyle}>
+        文字数: {latexInput.length}
+      </div>
       {/* 改行保持のオプションを追加 */}
       <div style={checkboxContainerStyle}>
         <input
@@ -147,9 +158,13 @@ const Popup: React.FC = () => {
       {/* 結果表示部分 */}
       <div style={{
         ...resultStyle, 
-        whiteSpace: preserveNewlines ? 'pre-wrap' : 'normal'
+        whiteSpace: preserveNewlines ? 'pre-wrap' : 'normal',
+        marginBottom: '2px' // 文字カウント用に調整
       }}>
         {markdownOutput}
+      </div>
+      <div style={countStyle}>
+        文字数: {markdownOutput.length}
       </div>
       <button 
         style={copyButtonStyle} 
