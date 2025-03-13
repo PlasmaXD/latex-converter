@@ -1,1 +1,3 @@
-以下は、エンコードされていない形式のインライン数式で表現した例です： - 一般形の1階常微分方程式: $ \frac{dy}{dx} = f(x,y) $ - 1階線形微分方程式: $ \frac{dy}{dx} + p(x)y = q(x) $ - 2階線形常微分方程式（斉次形）: $ \frac{d^2y}{dx^2} + p(x)\frac{dy}{dx} + q(x)y = 0 $ - 2階線形常微分方程式（非斉次形）: $ \frac{d^2y}{dx^2} + p(x)\frac{dy}{dx} + q(x)y = g(x) $
+npm run build
+
+chrome://extensions/

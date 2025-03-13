@@ -4,6 +4,8 @@ const Popup: React.FC = () => {
   const [latexInput, setLatexInput] = useState('')
   const [markdownOutput, setMarkdownOutput] = useState('')
   const [copyMessage, setCopyMessage] = useState('')
+  // 改行保持のオプションを追加
+  const [preserveNewlines, setPreserveNewlines] = useState(true)
 
   // LaTeX数式をMarkdown形式に変換する関数
   const convertLatexToMarkdown = (text: string): string => {
@@ -20,10 +22,24 @@ const Popup: React.FC = () => {
     
     // 文字列全体に対してディスプレイ数式の置換を行う
     let fullText = processedLines.join('\n')
-    // 改行を確実に維持するためにpreタグで囲む形式に変更
-    fullText = fullText.replace(/\\\[([\s\S]*?)\\\]/g, (match, p1) => {
-      return '\n$$$$ ' + p1 + ' $$$$\n'
-    })
+    
+    // 改行を保持するかどうかで処理を分ける
+    if (preserveNewlines) {
+      // 改行を維持するモード
+      fullText = fullText.replace(/\\\[([\s\S]*?)\\\]/g, (match, p1) => {
+        return '\n$$$$ ' + p1 + ' $$$$\n'
+      })
+    } else {
+      // 改行をキャンセルするモード - 改行を含む数式を一行に変換
+      fullText = fullText.replace(/\\\[([\s\S]*?)\\\]/g, (match, p1) => {
+        // 改行を削除して一行にする
+        const singleLine = p1.replace(/\n/g, ' ').trim()
+        return '$$ ' + singleLine + ' $$'
+      })
+      
+      // さらに、数式以外の改行も空白に変換する
+      fullText = fullText.replace(/\n/g, ' ');
+    }
     
     return fullText
   }
@@ -98,6 +114,12 @@ const Popup: React.FC = () => {
     marginTop: '4px'
   }
 
+  const checkboxContainerStyle: React.CSSProperties = {
+    marginBottom: '8px',
+    display: 'flex',
+    alignItems: 'center'
+  }
+
   return (
     <div style={containerStyle}>
       <h2>LaTeX → Markdown 変換</h2>
@@ -107,10 +129,26 @@ const Popup: React.FC = () => {
         value={latexInput}
         onChange={(e) => setLatexInput(e.target.value)}
       />
+      {/* 改行保持のオプションを追加 */}
+      <div style={checkboxContainerStyle}>
+        <input
+          type="checkbox"
+          id="preserveNewlines"
+          checked={preserveNewlines}
+          onChange={(e) => setPreserveNewlines(e.target.checked)}
+        />
+        <label htmlFor="preserveNewlines" style={{ marginLeft: '5px' }}>
+          改行を保持
+        </label>
+      </div>
       <button style={buttonStyle} onClick={handleConvert}>
         変換
       </button>
-      <div style={{...resultStyle, whiteSpace: 'pre-wrap'}}>
+      {/* 結果表示部分 */}
+      <div style={{
+        ...resultStyle, 
+        whiteSpace: preserveNewlines ? 'pre-wrap' : 'normal'
+      }}>
         {markdownOutput}
       </div>
       <button 
