@@ -27,7 +27,8 @@ const Popup: React.FC = () => {
     if (preserveNewlines) {
       // 改行を維持するモード
       fullText = fullText.replace(/\\\[([\s\S]*?)\\\]/g, (match, p1) => {
-        return '\n$$$$ ' + p1 + ' $$$$\n'
+        // $$$$ から $$ に修正
+        return '\n$$ ' + p1 + ' $$\n'
       })
     } else {
       // 改行をキャンセルするモード - 改行を含む数式を一行に変換
@@ -133,7 +134,7 @@ const Popup: React.FC = () => {
       <h2>LaTeX → Markdown 変換</h2>
       <textarea
         style={textAreaStyle}
-        placeholder="LaTeXコードを入力してください(テスト) "
+        placeholder="LaTeXコードを入力してください"
         value={latexInput}
         onChange={(e) => setLatexInput(e.target.value)}
       />
